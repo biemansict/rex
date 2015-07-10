@@ -1,0 +1,28 @@
+# Rexfile
+use Rex -feature => ['1.0'];
+
+user "root";
+private_key "/root/.ssh/id_rsa";
+public_key "/root/.ssh/id_rsa.pub";
+
+group all_servers => "SERVER1" , "SERVER2";
+
+task "setup_python-setuptools", group => "all_servers", sub {
+
+   # first we will install the package
+   pkg "python-setuptools",
+     ensure => "present";
+};
+
+task "setup_python-pip", group => "all_servers", sub {
+
+   # first we will install the package
+   pkg "python-pip",
+     ensure => "present";
+};
+
+task "run-pip", group => "all_servers", sub {
+
+   # first we will install the package
+run "pip install protobuf";
+};

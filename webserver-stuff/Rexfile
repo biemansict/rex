@@ -1,0 +1,28 @@
+# Rexfile
+use Rex -feature => ['1.0'];
+
+user "root";
+private_key "/root/.ssh/id_rsa";
+public_key "/root/.ssh/id_rsa.pub";
+
+group all_servers => "SERVER1" , "SERVER2";
+
+task "setup_apache", group => "all_servers", sub {
+
+   # first we will install the package
+   pkg "apache2",
+     ensure => "present";
+
+# then we will upload a configuration file.
+   # the configuration file is located in a subdirectory.
+   file "../etc/apache2/sites-enabled/test.conf",
+      source    => "files/test_Apache",
+      on_change => sub {
+         # we define a on_change hook, so that the apache server gets restarted if the file is modified.
+         service apache2 => "restart";
+      };
+
+   # now we register the service to start at boot time.
+   service "apache2",
+     ensure => "started";
+};
