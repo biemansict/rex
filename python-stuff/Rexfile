@@ -24,5 +24,6 @@ task "setup_python-pip", group => "all_servers", sub {
 task "run-pip", group => "all_servers", sub {
 
    # first we will install the package
-run "pip install protobuf";
+   my $output = run "pip install protobuf";
+   say $output;
 };
